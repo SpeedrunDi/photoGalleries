@@ -12,6 +12,10 @@ export const CREATE_PICTURE_REQUEST = 'CREATE_PICTURE_REQUEST';
 export const CREATE_PICTURE_SUCCESS = 'CREATE_PICTURE_SUCCESS';
 export const CREATE_PICTURE_FAILURE = 'CREATE_PICTURE_FAILURE';
 
+export const PUBLISH_PICTURE_REQUEST = 'PUBLISH_PICTURE_REQUEST';
+export const PUBLISH_PICTURE_SUCCESS = 'PUBLISH_PICTURE_SUCCESS';
+export const PUBLISH_PICTURE_FAILURE = 'PUBLISH_PICTURE_FAILURE';
+
 export const DELETE_PICTURE_REQUEST = 'DELETE_PICTURE_REQUEST';
 export const DELETE_PICTURE_SUCCESS = 'DELETE_PICTURE_SUCCESS';
 export const DELETE_PICTURE_FAILURE = 'DELETE_PICTURE_FAILURE';
@@ -27,6 +31,10 @@ const getUserPicturesFailure = error => ({type: GET_USER_PICTURES_FAILURE, paylo
 const createPicturesRequest = () => ({type: CREATE_PICTURE_REQUEST});
 const createPicturesSuccess = () => ({type: CREATE_PICTURE_SUCCESS});
 const createPicturesFailure = error => ({type: CREATE_PICTURE_FAILURE, payload: error});
+
+const publishPicturesRequest = () => ({type: PUBLISH_PICTURE_REQUEST});
+const publishPicturesSuccess = () => ({type: PUBLISH_PICTURE_SUCCESS});
+const publishPicturesFailure = error => ({type: PUBLISH_PICTURE_FAILURE, payload: error});
 
 const deletePicturesRequest = () => ({type: DELETE_PICTURE_REQUEST});
 const deletePicturesSuccess = () => ({type: DELETE_PICTURE_SUCCESS});
@@ -72,11 +80,25 @@ export const createPicture = pictureData => {
   };
 };
 
+export const publishPicture = id => {
+  return async dispatch => {
+    try {
+      dispatch(publishPicturesRequest());
+      await axiosApi.patch('/pictures/' + id);
+
+      dispatch(publishPicturesSuccess());
+    } catch (e) {
+      dispatch(publishPicturesFailure(e.response.data));
+      throw e;
+    }
+  };
+};
+
 export const deletePicture = id => {
   return async dispatch => {
     try {
       dispatch(deletePicturesRequest());
-      await axiosApi.delete('pictures/' + id);
+      await axiosApi.delete('/pictures/' + id);
 
       dispatch(deletePicturesSuccess());
     } catch (e) {

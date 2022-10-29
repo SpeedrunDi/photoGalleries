@@ -7,6 +7,7 @@ const config = require('../config');
 const auth = require("../middleware/auth");
 const Picture = require("../models/Picture");
 const User = require("../models/User");
+const permit = require("../middleware/permit");
 
 const router = express.Router();
 
@@ -80,6 +81,32 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
     const picture = new Picture(pictureData);
     await picture.save();
+
+    res.send(picture);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.patch('/:id', auth, permit('admin'), async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).send({message: 'ID not valid'});
+    }
+
+    const picture = await Picture.findOneAndUpdate({
+      _id: id
+    }, {
+      isPublished: true
+    }, {
+      returnDocument: 'after',
+    });
+
+    if (!picture) {
+      return res.status(404).send({message: "Picture not found!"});
+    }
 
     res.send(picture);
   } catch (e) {

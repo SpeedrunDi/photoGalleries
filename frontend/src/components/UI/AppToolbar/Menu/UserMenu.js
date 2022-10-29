@@ -24,7 +24,7 @@ const UserMenu = ({user}) => {
 
   const logout = async () => {
     await dispatch(logoutUser());
-    history.push('/');
+    history.push('/login');
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, Grid, Typography} from "@mui/material";
+import {Box, Card, CardActions, CardHeader, CardMedia, Grid, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import {apiUrl} from "../../config";
 import {Link} from "react-router-dom";
@@ -15,26 +15,38 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-const PictureItem = ({picture, openModal, currentUser, loading, onDelete}) => {
+const PictureItem = ({picture, openModal, currentUser, loading, onDelete, onPublish}) => {
   const {classes} = useStyles();
+
+  let publish;
+  let cursor = "pointer";
+  if (currentUser && currentUser.role === 'admin') {
+    publish = () => onPublish(picture._id);
+  } else if (currentUser && currentUser.role === 'user') {
+    cursor = "stroke";
+  }
 
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{height: '100%', position: "relative"}}>
         {
           picture.isPublished === false &&
-          <Typography
-            variant="span"
+          <Box
             position="absolute"
-            color="white"
             top="20px"
             right="5px"
-            padding="3px 5px"
-            borderRadius="5px"
-            sx={{background: "rgba(0, 0, 0, 0.5)"}}
           >
-            unpublished
-          </Typography>
+            <Typography
+              variant="span"
+              color="white"
+              padding="3px 5px"
+              borderRadius="5px"
+              sx={{background: "rgba(0, 0, 0, 0.5)", cursor: cursor}}
+              onClick={publish}
+            >
+              unpublished
+            </Typography>
+          </Box>
         }
         <CardMedia
           title={picture.title}
@@ -55,11 +67,18 @@ const PictureItem = ({picture, openModal, currentUser, loading, onDelete}) => {
               </Link>
             </Typography>
           </CardActions>
-        ) : currentUser && currentUser._id === picture.user._id && (
+        ) : currentUser && currentUser._id === picture.user._id || currentUser.role === 'admin' && (
           <CardActions sx={{justifyContent: "center"}}>
-            <ButtonWithProgress loading={loading} disabled={loading} variant="outlined" onClick={() => onDelete(picture._id)}>
+            <ButtonWithProgress loading={loading} disabled={loading} variant="outlined" color="error" onClick={() => onDelete(picture._id)}>
               Delete
             </ButtonWithProgress>
+            {
+              picture.isPublished === false && (
+                <ButtonWithProgress loading={loading} disabled={loading} variant="outlined" >
+                  Create Link
+                </ButtonWithProgress>
+              )
+            }
           </CardActions>
         )}
       </Card>
@@ -72,7 +91,8 @@ PictureItem.propTypes = {
   openModal: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
   loading: PropTypes.bool,
-  onDelete: PropTypes.func
+  onDelete: PropTypes.func,
+  onPublish: PropTypes.func
 };
 
 export default PictureItem;

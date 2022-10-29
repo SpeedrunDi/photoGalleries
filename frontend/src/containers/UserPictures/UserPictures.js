@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {deletePicture, getUserPictures} from "../../store/actions/picturesActions";
 import {Box, CircularProgress, Grid, Typography} from "@mui/material";
+import {deletePicture, getUserPictures, publishPicture} from "../../store/actions/picturesActions";
 import PictureItem from "../../components/PictureItem/PictureItem";
 import PicModal from "../../components/PicModal/PicModal";
 
@@ -26,9 +26,18 @@ const UserPictures = ({match}) => {
     setPic(null);
   };
 
+  const onPublish = async id => {
+    await dispatch(publishPicture(id));
+    dispatch(getUserPictures(match.params.id));
+  };
+
   const onDeletePicture = async id => {
     await dispatch(deletePicture(id));
     dispatch(getUserPictures(match.params.id));
+  };
+
+  const onCreateLinkOnPicture = () => {
+
   };
 
   return loading ? <Box width="max-content" marginX="auto"><CircularProgress color="primary"/></Box> : (
@@ -51,6 +60,7 @@ const UserPictures = ({match}) => {
                       currentUser={user}
                       onDelete={onDeletePicture}
                       loading={deleteLoading}
+                      onPublish={onPublish}
                     />
                   ))}
                 </Grid>

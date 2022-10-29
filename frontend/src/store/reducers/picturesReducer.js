@@ -10,7 +10,7 @@ import {
   GET_PICTURES_SUCCESS,
   GET_USER_PICTURES_FAILURE,
   GET_USER_PICTURES_REQUEST,
-  GET_USER_PICTURES_SUCCESS
+  GET_USER_PICTURES_SUCCESS, PUBLISH_PICTURE_FAILURE, PUBLISH_PICTURE_REQUEST, PUBLISH_PICTURE_SUCCESS
 } from "../actions/picturesActions";
 
 const initialState = {
@@ -42,6 +42,13 @@ const picturesReducer = (state = initialState, action) => {
     case CREATE_PICTURE_SUCCESS:
       return {...state, loading: false};
     case CREATE_PICTURE_FAILURE:
+      return {...state, loading: false, error: action.payload};
+
+    case PUBLISH_PICTURE_REQUEST:
+      return {...state, loading: true, error: null};
+    case PUBLISH_PICTURE_SUCCESS:
+      return {...state, loading: false};
+    case PUBLISH_PICTURE_FAILURE:
       return {...state, loading: false, error: action.payload};
 
     case DELETE_PICTURE_REQUEST:
