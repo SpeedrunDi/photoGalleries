@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import {Box, CircularProgress, Grid, Typography} from "@mui/material";
 import {getPictures} from "../../store/actions/picturesActions";
-import {Box, CircularProgress} from "@mui/material";
+import PictureItem from "../../components/PictureItem/PictureItem";
 
 const Pictures = () => {
   const dispatch = useDispatch();
@@ -13,9 +14,23 @@ const Pictures = () => {
   }, [dispatch]);
 
   return loading ? <Box width="max-content" marginX="auto"><CircularProgress color="primary"/></Box> : (
-    <div>
-
-    </div>
+    <Grid container direction="column" spacing={2}>
+      {
+        pictures.length !== 0 ? (
+          <Grid item container spacing={3}>
+            {pictures.map(picture => (
+              <PictureItem
+                key={picture._id}
+                id={picture._id}
+                title={picture.title}
+                image={picture.image}
+                user={picture.user}
+              />
+            ))}
+          </Grid>
+        ) : <Typography variant="h2" textAlign="center">No pictures!</Typography>
+      }
+    </Grid>
   );
 };
 

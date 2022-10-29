@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
   try {
     const pictures = await Picture
       .find()
-      .populate('user');
+      .populate('user', 'displayName');
 
     res.send(pictures);
   } catch (e) {
