@@ -44,6 +44,10 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+
+});
+
 router.get('/users/:id', async (req, res) => {
   const id = req.params.id;
 
@@ -83,6 +87,38 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     await picture.save();
 
     res.send(picture);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.patch('/create_link/:id', auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).send({message: 'ID not valid'});
+    }
+
+    const picture = await Picture.findOne({_id: id});
+
+    if (!picture) {
+      return res.status(404).send({message: "Picture not found!"});
+    }
+
+    if (req.user._id.equals(picture.user) && picture.isPublished === false) {
+      const updatedPicture = await Picture.findOneAndUpdate({
+        _id: id
+      }, {
+        token: nanoid()
+      }, {
+        returnDocument: 'after',
+      });
+
+      return res.send(updatedPicture);
+    }
+
+    res.status(403).send({message: 'You have no rights!'});
   } catch (e) {
     res.status(400).send(e);
   }

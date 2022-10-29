@@ -1,4 +1,6 @@
 import {
+  CREATE_LINK_PICTURE_FAILURE,
+  CREATE_LINK_PICTURE_REQUEST, CREATE_LINK_PICTURE_SUCCESS,
   CREATE_PICTURE_FAILURE,
   CREATE_PICTURE_REQUEST,
   CREATE_PICTURE_SUCCESS,
@@ -50,6 +52,13 @@ const picturesReducer = (state = initialState, action) => {
       return {...state, loading: false};
     case PUBLISH_PICTURE_FAILURE:
       return {...state, loading: false, error: action.payload};
+
+    case CREATE_LINK_PICTURE_REQUEST:
+      return {...state, deleteLoading: true, deleteError: null};
+    case CREATE_LINK_PICTURE_SUCCESS:
+      return {...state, deleteLoading: false};
+    case CREATE_LINK_PICTURE_FAILURE:
+      return {...state, deleteLoading: false, deleteError: action.payload};
 
     case DELETE_PICTURE_REQUEST:
       return {...state, deleteLoading: true, deleteError: null};

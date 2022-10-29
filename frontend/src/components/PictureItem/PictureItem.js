@@ -1,5 +1,5 @@
-import React from 'react';
-import {Box, Card, CardActions, CardHeader, CardMedia, Grid, Typography} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {Alert, Box, Card, CardActions, CardHeader, CardMedia, Grid, Typography} from "@mui/material";
 import PropTypes from "prop-types";
 import {apiUrl} from "../../config";
 import {Link} from "react-router-dom";
@@ -15,8 +15,17 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-const PictureItem = ({picture, openModal, currentUser, loading, onDelete, onPublish}) => {
+const PictureItem = ({picture, openModal, currentUser, loading, onDelete, onPublish, onCreateLink}) => {
   const {classes} = useStyles();
+  const [copy, setCopy] = useState(false);
+
+  useEffect(() => {
+    if (copy) {
+      setTimeout(() => {
+        setCopy(false);
+      }, 2000);
+    }
+  }, [copy]);
 
   let publish;
   let cursor = "pointer";
@@ -24,6 +33,63 @@ const PictureItem = ({picture, openModal, currentUser, loading, onDelete, onPubl
     publish = () => onPublish(picture._id);
   } else if (currentUser && currentUser.role === 'user') {
     cursor = "stroke";
+  }
+
+  let link;
+  if (picture.token) {
+    link = apiUrl + '/' + picture.image;
+  }
+
+  let buttons;
+  if (currentUser && currentUser._id === picture.user._id) {
+    buttons = (
+      <>
+        <ButtonWithProgress
+          loading={loading}
+          disabled={loading}
+          variant="outlined"
+          color="error"
+          onClick={() => onDelete(picture._id)}
+        >
+          Delete
+        </ButtonWithProgress>
+        {copy && (
+          <Alert severity="success">
+            Copied!
+          </Alert>
+        )}
+        {
+          picture.isPublished === false && (
+            link ? <Typography
+              onClick={() => [navigator.clipboard.writeText(link), setCopy(true)]}
+            >
+              {link}
+            </Typography> : (
+              <ButtonWithProgress
+                loading={loading}
+                disabled={loading}
+                variant="outlined"
+                onClick={() => onCreateLink(picture._id)}
+              >
+                Create Link
+              </ButtonWithProgress>
+            )
+          )
+        }
+      </>
+    );
+  } else if (currentUser && currentUser.role === 'admin') {
+    buttons = (
+      <ButtonWithProgress
+        loading={loading}
+        disabled={loading}
+        variant="outlined"
+        color="error"
+        onClick={() => onDelete(picture._id)}
+      >
+        Delete
+      </ButtonWithProgress>
+    );
   }
 
   return (
@@ -67,18 +133,9 @@ const PictureItem = ({picture, openModal, currentUser, loading, onDelete, onPubl
               </Link>
             </Typography>
           </CardActions>
-        ) : currentUser && currentUser._id === picture.user._id || currentUser.role === 'admin' && (
-          <CardActions sx={{justifyContent: "center"}}>
-            <ButtonWithProgress loading={loading} disabled={loading} variant="outlined" color="error" onClick={() => onDelete(picture._id)}>
-              Delete
-            </ButtonWithProgress>
-            {
-              picture.isPublished === false && (
-                <ButtonWithProgress loading={loading} disabled={loading} variant="outlined" >
-                  Create Link
-                </ButtonWithProgress>
-              )
-            }
+        ) : (
+          <CardActions sx={{justifyContent: "center", flexDirection: "column"}}>
+            {buttons}
           </CardActions>
         )}
       </Card>
@@ -92,7 +149,8 @@ PictureItem.propTypes = {
   currentUser: PropTypes.object,
   loading: PropTypes.bool,
   onDelete: PropTypes.func,
-  onPublish: PropTypes.func
+  onPublish: PropTypes.func,
+  onCreateLink: PropTypes.func
 };
 
 export default PictureItem;
