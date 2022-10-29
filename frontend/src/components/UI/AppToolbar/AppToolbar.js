@@ -6,12 +6,20 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Anonymous from "./Menu/Anonymous";
 import UserMenu from "./Menu/UserMenu";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles()(theme => ({
+  mainLink: {
+    color: 'inherit',
+    textDecoration: 'none',
+    '&:hover': {
+      color: 'inherit'
+    }
+  },
   staticToolbar: {
-    marginBottom: theme.spacing(4),
-  }
-}));
+    marginBottom: theme.spacing(2),
+  },
+}))
 
 const AppToolbar = () => {
   const {classes} = useStyles();
@@ -25,9 +33,11 @@ const AppToolbar = () => {
         <Toolbar>
           <Grid container justifyContent="space-between" alignItems="center" paddingTop="10px">
             <Grid item>
-             <Typography variant="h4">
-               Photo Gallery
-             </Typography>
+              <Typography variant="h4">
+                <Link to="/" className={classes.mainLink}>
+                  Photo Gallery
+                </Link>
+              </Typography>
             </Grid>
             <Grid item>
               {user ? <UserMenu user={user}/> : <Anonymous/>}

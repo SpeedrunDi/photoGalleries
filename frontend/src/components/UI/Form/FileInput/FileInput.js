@@ -8,7 +8,7 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-const FileInput = ({onChange, name, label}) => {
+const FileInput = ({onChange, name, label, error}) => {
   const {classes} = useStyles();
   const inputRef = useRef();
 
@@ -45,6 +45,8 @@ const FileInput = ({onChange, name, label}) => {
             label={label}
             value={filename}
             onClick={activateInput}
+            error={Boolean(error)}
+            helperText={error}
           />
         </Grid>
         <Grid item>
