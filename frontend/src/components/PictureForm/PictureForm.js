@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Grid} from "@mui/material";
+import {Alert, Grid} from "@mui/material";
 import FormElement from "../UI/Form/FormElement/FormElement";
 import FileInput from "../UI/Form/FileInput/FileInput";
 import ButtonWithProgress from "../UI/ButtonWithProgress/ButtonWithProgress";
@@ -58,6 +58,11 @@ const PictureForm = ({error, loading, onSubmit}) => {
         rowSpacing={2}
       >
 
+        {error && error.message && (
+          <Alert severity="error">
+            Error! {error.message}
+          </Alert>
+        )}
         <FormElement
           required={true}
           label="Title"

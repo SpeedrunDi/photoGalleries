@@ -51,7 +51,7 @@ const UserMenu = ({user}) => {
           }}
           sx={{marginTop: "15px", marginLeft: "20px"}}
         >
-          <MenuItem>My profile</MenuItem>
+          <MenuItem onClick={handleClose} component={Link} to={'/users/' + user._id}>My pictures</MenuItem>
           <MenuItem onClick={handleClose} component={Link} to='/new_picture'>Add picture</MenuItem>
           <MenuItem onClick={logout}>Logout</MenuItem>
           {loading && <LinearProgress/>}

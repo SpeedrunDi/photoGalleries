@@ -19,7 +19,7 @@ const useStyles = makeStyles()(theme => ({
   staticToolbar: {
     marginBottom: theme.spacing(2),
   },
-}))
+}));
 
 const AppToolbar = () => {
   const {classes} = useStyles();

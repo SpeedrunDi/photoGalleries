@@ -1,15 +1,24 @@
 import {
   CREATE_PICTURE_FAILURE,
-  CREATE_PICTURE_REQUEST, CREATE_PICTURE_SUCCESS,
+  CREATE_PICTURE_REQUEST,
+  CREATE_PICTURE_SUCCESS,
+  DELETE_PICTURE_FAILURE,
+  DELETE_PICTURE_REQUEST,
+  DELETE_PICTURE_SUCCESS,
   GET_PICTURES_FAILURE,
   GET_PICTURES_REQUEST,
-  GET_PICTURES_SUCCESS
+  GET_PICTURES_SUCCESS,
+  GET_USER_PICTURES_FAILURE,
+  GET_USER_PICTURES_REQUEST,
+  GET_USER_PICTURES_SUCCESS
 } from "../actions/picturesActions";
 
 const initialState = {
   pictures: [],
   loading: false,
-  error: null
+  error: null,
+  deleteLoading: false,
+  deleteError: null
 };
 
 const picturesReducer = (state = initialState, action) => {
@@ -21,12 +30,26 @@ const picturesReducer = (state = initialState, action) => {
     case GET_PICTURES_FAILURE:
       return {...state, loading: false, error: action.payload};
 
+    case GET_USER_PICTURES_REQUEST:
+      return {...state, loading: true, error: null};
+    case GET_USER_PICTURES_SUCCESS:
+      return {...state, loading: false, pictures: action.payload};
+    case GET_USER_PICTURES_FAILURE:
+      return {...state, loading: false, error: action.payload};
+
     case CREATE_PICTURE_REQUEST:
       return {...state, loading: true, error: null};
     case CREATE_PICTURE_SUCCESS:
       return {...state, loading: false};
     case CREATE_PICTURE_FAILURE:
       return {...state, loading: false, error: action.payload};
+
+    case DELETE_PICTURE_REQUEST:
+      return {...state, deleteLoading: true, deleteError: null};
+    case DELETE_PICTURE_SUCCESS:
+      return {...state, deleteLoading: false};
+    case DELETE_PICTURE_FAILURE:
+      return {...state, deleteLoading: false, deleteError: action.payload};
 
     default:
       return state;

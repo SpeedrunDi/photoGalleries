@@ -33,10 +33,7 @@ const Pictures = () => {
               {pictures.map(picture => (
                 <PictureItem
                   key={picture._id}
-                  id={picture._id}
-                  title={picture.title}
-                  image={picture.image}
-                  user={picture.user}
+                  picture={picture}
                   openModal={openModal}
                 />
               ))}

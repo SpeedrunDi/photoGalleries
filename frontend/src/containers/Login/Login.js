@@ -75,7 +75,7 @@ const Login = ({history}) => {
 
         {error && (
           <Alert severity="error" className={classes.alert}>
-            Error! {error.error}
+            Error! {error.message}
           </Alert>
         )}
 

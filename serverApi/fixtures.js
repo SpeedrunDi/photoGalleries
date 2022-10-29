@@ -53,7 +53,7 @@ const run = async () => {
   }, {
     title: 'GTX 1080',
     image: 'fixtures/1080.jpeg',
-    isPublished: true,
+    isPublished: false,
     user: user2._id
   });
 

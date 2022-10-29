@@ -5,12 +5,14 @@ import Register from "./containers/Register/Register";
 import Login from "./containers/Login/Login";
 import Pictures from "./containers/Pictures/Pictures";
 import AddPicture from "./containers/AddPicture/AddPicture";
+import UserPictures from "./containers/UserPictures/UserPictures";
 
 const App = () => (
   <Layout>
     <Switch>
       <Route path="/" exact component={Pictures}/>
       <Route path="/new_picture" component={AddPicture}/>
+      <Route path="/users/:id" component={UserPictures}/>
       <Route path="/register" component={Register}/>
       <Route path="/login" component={Login}/>
       <Route path="*" render={() => <Typography variant="h1" textAlign="center">Not found!</Typography>}/>
